@@ -19,15 +19,6 @@ describe Grid do
 		end
 	end
 
-	context 'with alive cell' do
-
-		it 'has one alive cell' do
-			subject.populate_grid(1)
-			expect(subject.current_grid[0][1].state).to eq 1
-		end
-
-	end
-
 end
 
 describe RuleCalculator do
@@ -36,19 +27,19 @@ describe RuleCalculator do
 			expect(
 				RuleCalculator.run_rules([
 					[0,0,0],
-					[0,0,0],
+					[0,1,0],
 					[0,0,0]
-				])
+				], 1, 1)
 			).to eq 0
 		end
 
-		it "dies with less than two neighbours" do
+		it "remains dead with less than three neighbours" do
 			expect(
 				RuleCalculator.run_rules([
 					[0,0,1],
 					[0,0,0],
 					[0,0,0]
-				])
+				], 1, 1,)
 			).to eq 0
 		end
 	end
@@ -60,19 +51,19 @@ describe RuleCalculator do
 					[0,1,1],
 					[0,1,0],
 					[0,0,0]
-				])
+				], 1, 1)
 			).to eq 1
 		end
 	end
 
 	context "Rule 3" do
-		it "lives with two or three neighbours" do
+		it "remains dead with more than three neighbours" do
 			expect(
 				RuleCalculator.run_rules([
 					[1,1,1],
 					[1,0,0],
 					[0,0,0]
-				])
+				], 1, 1)
 			).to eq 0
 		end
 	end
@@ -84,18 +75,8 @@ describe RuleCalculator do
 					[1,1,1],
 					[0,0,0],
 					[0,0,0]
-				])
+				], 1, 1)
 			).to eq 1
-		end
-
-		it "is reborn with exactly three neighbours" do
-			expect(
-				RuleCalculator.run_rules([
-					[1,0,1],
-					[0,0,0],
-					[0,0,0]
-				])
-			).to eq 0
 		end
 	end
 end
@@ -136,23 +117,48 @@ describe NeighbourCalculator do
 end 
 
 describe WorldTicker do
-	it "expect it to calculate rules for all cells" do
-		input = [
-			[0,0,0,0],
-			[0,0,1,0],
-			[0,1,1,0],
-			[0,0,0,0]
-		]
+#	it "expect it to calculate rules for all cells" do
+#		input = [
+#			[0,0,0,0],
+#			[0,0,1,0],
+#			[0,1,1,0],
+#			[0,0,0,0]
+#		]
+#
+#		result = [
+#			[0,0,0,0],
+#			[0,1,1,0],
+#			[0,1,1,0],
+#			[0,0,0,0]
+#		]
+#
+#		expect(described_class.calculate_world(input)).to eq result
+#	end
+end
 
-		result = [
-			[0,0,0,0],
-			[0,1,1,0],
-			[0,1,1,0],
-			[0,0,0,0]
-		]
+describe MatrixGenerator do
+  it "returns all the top cells for the given cell" do
+    input = [
+      [0,0,1],
+      [0,1,0],
+      [0,0,0]
+    ]
+    
+    result = [0, 1, 0]
+    expect(described_class.elements_above(input, 1, 1)).to eq result
+  end
 
-		expect(described_class.calculate_world(input)).to eq result
-	end
+  it "returns no elements if there is no top cells" do
+
+    input = [
+      [0,0,1],
+      [0,1,0],
+      [0,0,0]
+    ]
+    
+    result = []
+    expect(described_class.elements_above(input, 0, 0)).to eq result
+  end
 end
 
 describe Cell do

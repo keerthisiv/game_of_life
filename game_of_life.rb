@@ -8,31 +8,60 @@ class Grid
 		@current_grid = Array.new(rows, Array.new(columns, Cell.new(0)))
 	end
 
-	def populate_grid(no_of_cells)
-		(1..no_of_cells).each do |cell|
-			@current_grid[@rows - cell][cell] = Cell.new(1) 
-		end	
-	end
-
 end
 
 class WorldTicker
 
-	def self.calculate_world(matrix)
-		result = matrix.dup
-		matrix.each {|row| 
-			row.each {|cell|
+#  def self.calculate_world(matrix)
+#    i = 0
+#    result = []
+#    matrix.each do |row| 
+#      j = 0
+#      row.each do |cell|
+#        matrix = get_matrix_for_this_cell
+#        result <<  RuleCalculator.run_rules(matrix, i, j)
+#        j += 1
+#      end
+#      i += 1
+#    end
+#    result
+#  end
 
-			}
-		}
-	end
+end
+
+class MatrixGenerator
+
+  def self.elements_above(matrix, index_x, index_y)
+    elements = []
+    if index_x > 0
+      elements << matrix[index_x - 1][index_y]
+      elements << matrix[index_x - 1][index_y + 1]
+      elements << matrix[index_x - 1][index_y - 1]
+    end
+    elements
+  end
+  
+  def self.generate_matrix(matrix, index_x, index_y)
+    result_matrix = []
+    if index_x + 1 <= matrix.length - 1
+      result_matrix << matrix[index_x + 1][index_y]
+      if index_y + 1 <= matrix.length -  1
+        result_matrix << matrix[index_x + 1][index_y + 1]
+        result_matrix << matrix[index_x][index_y + 1]
+      end
+    end
+
+    if index_x - 1 >= 0 
+      result_matrix << martix
+    end
+  end
 
 end
 
 class RuleCalculator
-	def self.run_rules(matrix)
+	def self.run_rules(matrix, index_x, index_y)
 		neighbours = NeighbourCalculator.get_neighbours(matrix)
-		me = matrix[1][1]
+		me = matrix[index_x][index_y]
 		if me == 1
 			if neighbours > 1 && neighbours <= 3 
 				1
