@@ -35,12 +35,25 @@ class MatrixGenerator
     elements = []
     if index_x > 0
       elements << matrix[index_x - 1][index_y]
-      elements << matrix[index_x - 1][index_y + 1]
-      elements << matrix[index_x - 1][index_y - 1]
+      if index_y <= matrix.length - 1
+        elements << matrix[index_x - 1][index_y + 1]
+      end
+      if index_y > 0 
+        elements << matrix[index_x - 1][index_y - 1]
+      end
     end
-    elements
+    elements.compact
   end
   
+  def self.elements_on_sides(matrix, index_x, index_y)
+    elements = []
+    elements << matrix[index_x][index_y - 1]
+    if index_y < matrix.length - 1
+      elements << matrix[index_x][index_y + 1]
+    end 
+    elements
+  end
+
   def self.generate_matrix(matrix, index_x, index_y)
     result_matrix = []
     if index_x + 1 <= matrix.length - 1

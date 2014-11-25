@@ -137,27 +137,44 @@ describe WorldTicker do
 end
 
 describe MatrixGenerator do
-  it "returns all the top cells for the given cell" do
-    input = [
-      [0,0,1],
-      [0,1,0],
-      [0,0,0]
-    ]
-    
-    result = [0, 1, 0]
-    expect(described_class.elements_above(input, 1, 1)).to eq result
+  let(:input) { [
+        [0,0,1],
+        [0,1,0],
+        [0,0,0]
+      ]}
+
+  context "#elements_above" do
+    it "returns all the top cells for the given cell" do
+      result = [0, 1, 0]
+      expect(described_class.elements_above(input, 1, 1)).to eq result
+    end
+
+    it "returns no elements if there is no top cells" do
+      result = []
+      expect(described_class.elements_above(input, 0, 0)).to eq result
+    end
+
+    it "returns only two elements if there no left cells" do
+      result = [0, 0]
+      expect(described_class.elements_above(input, 1, 0)).to eq result
+    end
+
+    it "returns only two elements if there no left cells" do
+      result = [1, 0]
+      expect(described_class.elements_above(input, 1, 2)).to eq result
+    end
   end
 
-  it "returns no elements if there is no top cells" do
+  context "#elements_on_sides" do 
+    it "returns elements on both the sides" do 
+      result = [0, 0]
+      expect(described_class.elements_on_sides(input, 1, 1)).to eq result
+    end
 
-    input = [
-      [0,0,1],
-      [0,1,0],
-      [0,0,0]
-    ]
-    
-    result = []
-    expect(described_class.elements_above(input, 0, 0)).to eq result
+    it "returns only elemnets on the left side if there are no elements to the right" do
+      result = [1]
+      expect(described_class.elements_on_sides(input, 1, 2)).to eq result
+    end
   end
 end
 
